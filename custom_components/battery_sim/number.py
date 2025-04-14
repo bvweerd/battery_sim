@@ -127,4 +127,5 @@ class BatterySlider(RestoreNumber):
 
         if (last_number_data := await self.async_get_last_number_data()) is not None:
             self._value = last_number_data.native_value
+            _LOGGER.debug("Restored %s to %.2f", self._key, self._value)
             self.handle.set_slider_limit(self._value, self._key)  # Restore to handle too

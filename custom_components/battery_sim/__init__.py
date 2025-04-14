@@ -186,8 +186,8 @@ class SimulatedBatteryHandle:
         self._max_discharge: float = 0.0
         self._charge_percentage: float = 0.0
         self._charge_state: float = 0.0
-        self._charge_limit: float = 0.0
-        self._discharge_limit: float = 0.0
+        self._charge_limit = config[CONF_BATTERY_MAX_CHARGE_RATE]
+        self._discharge_limit = config[CONF_BATTERY_MAX_DISCHARGE_RATE]
         self._accumulated_export_reading: float = 0.0
         self._last_import_reading_sensor_data: str = None
         self._last_export_reading_sensor_data: str = None
@@ -400,7 +400,7 @@ class SimulatedBatteryHandle:
 
         return float(self._hass.states.get(input_details[TARIFF_SENSOR]).state)
 
-    def set_slider_limit(self, value: float, key):
+    def set_slider_limit(self, value: float, key: str):
         """Called by slider to update internal charge limit."""
         if key == "charge_limit":        
             self._charge_limit = value
