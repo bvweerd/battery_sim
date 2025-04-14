@@ -7,7 +7,11 @@ from homeassistant.helpers.typing import DiscoveryInfoType
 
 from homeassistant.components.number import NumberEntity
 
-from .const import DOMAIN
+from .const import (
+    DOMAIN,
+    CHARGE_LIMIT,
+    DISCHARGE_LIMIT,
+)
  
 import logging
 
