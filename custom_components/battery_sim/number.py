@@ -70,7 +70,7 @@ class BatterySlider(RestoreNumber):
         self._name = f"{handle._name} - {slider_type}"
         if key == "charge_limit":
             self._max_value = handle._max_charge_rate
-        else if key == "discharge_limit":               
+        elif key == "discharge_limit":               
             self._max_value = handle._max_discharge_rate
         else:
             _LOGGER.error("Unknown slider type in number.py")

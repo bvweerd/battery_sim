@@ -404,7 +404,7 @@ class SimulatedBatteryHandle:
         """Called by slider to update internal charge limit."""
         if key == "charge_limit":        
             self._charge_limit = value
-        else if key == "discharge_limit":        
+        elif key == "discharge_limit":        
             self._discharge_limit = value
         else:
             _LOGGER.error("Unknown slider type in __init__.py")
