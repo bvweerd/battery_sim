@@ -24,11 +24,12 @@ jobs:
           pip install pre-commit
 
       - name: Install dependencies for pre-commit hooks
+        working-directory: ./
         run: |
           pre-commit install
-          working-directory: ./
+
 
       - name: Run pre-commit hooks
+        working-directory: ./
         run: |
           pre-commit run --all-files
-          working-directory: ./
