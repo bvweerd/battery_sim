@@ -4,18 +4,31 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from homeassistant.core import HomeAssistant
 
-from custom_components.battery_sim.const import DOMAIN
-
+from custom_components.battery_sim.const import (
+    DOMAIN,
+    CONF_BATTERY_CAPACITY,
+    CONF_BATTERY_MAX_CHARGE_RATE,
+    CONF_BATTERY_MAX_DISCHARGE_RATE,
+    CONF_BATTERY_START_CHARGE,
+    CONF_BATTERY_NAME
+)
 
 @pytest.mark.asyncio
 async def test_async_setup_entry(hass: HomeAssistant):
     """Test successful setup of a config entry."""
     entry = MockConfigEntry(
         domain=DOMAIN,
-        title="Test Battery Sim",
-        data={"name": "TestBattery"},
-        unique_id="test_battery_id",
+        title="Battery Sim Test",
+        data={
+            CONF_BATTERY_NAME: "TestBattery",
+            CONF_BATTERY_CAPACITY: 10.0,
+            CONF_BATTERY_MAX_CHARGE_RATE: 2.0,
+            CONF_BATTERY_MAX_DISCHARGE_RATE: 2.0,
+            CONF_BATTERY_START_CHARGE: 50.0
+        },
+    unique_id="test_battery_id"
     )
+    
     entry.add_to_hass(hass)
 
     # Setup the config entry
