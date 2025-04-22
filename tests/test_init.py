@@ -4,7 +4,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from homeassistant.core import HomeAssistant
 
-from battery_sim.const import DOMAIN
+from custom_components.battery_sim.const import DOMAIN
 
 
 @pytest.mark.asyncio
