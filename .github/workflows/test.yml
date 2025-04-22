@@ -1,19 +1,20 @@
-name: Run tests
+name: Run Tests
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
   workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
 
 jobs:
   test:
-    name: Test battery_sim integration
     runs-on: ubuntu-latest
 
+    env:
+      PYTHONPATH: .
+
     steps:
-      - name: Check out the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -21,14 +22,10 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Set up test dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pytest-asyncio pytest-homeassistant-custom-component
+          pip install pytest pytest-homeassistant-custom-component
 
       - name: Run tests
-        run: |
-          PYTHONPATH=. pytest tests
+        run: pytest
