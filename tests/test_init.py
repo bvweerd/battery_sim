@@ -6,7 +6,6 @@ from homeassistant.core import HomeAssistant
 
 from custom_components.battery_sim.const import (
     DOMAIN,
-    CONF_BATTERY_NAME,
     CONF_BATTERY_CAPACITY,
     CONF_BATTERY_MAX_CHARGE_RATE,
     CONF_BATTERY_MAX_DISCHARGE_RATE,
