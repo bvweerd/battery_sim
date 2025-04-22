@@ -2,7 +2,7 @@
 
 import pytest
 from custom_components.battery_sim.number import BatterySlider
-from battery_sim.const import CHARGE_LIMIT
+from custom_components.battery_sim.const import CHARGE_LIMIT
 from homeassistant.components.number import NumberMode
 
 from tests.conftest import mock_handle
