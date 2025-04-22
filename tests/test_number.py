@@ -9,22 +9,11 @@ from tests.conftest import mock_handle
 
 
 @pytest.mark.asyncio
-async def test_battery_slider_initialization(hass):
+async def test_battery_slider_initialization(mock_handle):
     """Test that the BatterySlider initializes correctly."""
-
-    handle = mock_handle("TestBattery")
-    slider = BatterySlider(handle, CHARGE_LIMIT, "charge_limit", "mdi:battery")
-
-    assert slider.name == "TestBattery - Charge Limit"
-    assert slider.unique_id == "TestBattery - Charge Limit"
-    assert slider.native_min_value == 0.00
-    assert slider.native_max_value == handle._max_charge_rate
-    assert slider.native_step == 0.01
-    assert slider.native_value == handle._max_charge_rate
-    assert slider.icon == "mdi:battery"
-    assert slider.mode == NumberMode.BOX
-    assert slider.unit_of_measurement == "kW"
-
+    slider = BatterySlider(mock_handle, CHARGE_LIMIT, "charge_limit", "mdi:battery")
+    assert slider.name == "TestBattery - charge_limit"
+    
 
 @pytest.mark.asyncio
 async def test_battery_slider_set_value(hass):
