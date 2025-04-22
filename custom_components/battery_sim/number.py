@@ -1,11 +1,6 @@
-#from homeassistant.components.number import NumberEntity
+# from homeassistant.components.number import NumberEntity
 from homeassistant.components.number import RestoreNumber
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.typing import DiscoveryInfoType
 
-from homeassistant.components.number import NumberEntity
 
 from .const import (
     DOMAIN,
@@ -13,7 +8,7 @@ from .const import (
     CHARGE_LIMIT,
     DISCHARGE_LIMIT,
 )
- 
+
 import logging
 
 _LOGGER = logging.getLogger(__name__)
@@ -30,7 +25,8 @@ BATTERY_SLIDERS = [
         "icon": "mdi:car-speed-limiter",
     },
 ]
- 
+
+
 async def async_setup_entry(hass, config_entry, async_add_entities):
     handle = hass.data[DOMAIN][config_entry.entry_id]
 
@@ -43,7 +39,10 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
     return True
 
-async def async_setup_platform( hass, configuration, async_add_entities, discovery_info=None ):
+
+async def async_setup_platform(
+    hass, configuration, async_add_entities, discovery_info=None
+):
     if discovery_info is None:
         _LOGGER.error("This platform is only available through discovery")
         return
@@ -60,8 +59,8 @@ async def async_setup_platform( hass, configuration, async_add_entities, discove
     async_add_entities(sliders)
 
     return True
- 
-   
+
+
 class BatterySlider(RestoreNumber):
     """Slider to set a numeric parameter for the simulated battery."""
 
@@ -75,7 +74,7 @@ class BatterySlider(RestoreNumber):
         self._name = f"{handle._name} - {slider_type}"
         if key == "charge_limit":
             self._max_value = handle._max_charge_rate
-        elif key == "discharge_limit":               
+        elif key == "discharge_limit":
             self._max_value = handle._max_discharge_rate
         else:
             _LOGGER.error("Unknown slider type in number.py")
@@ -83,7 +82,7 @@ class BatterySlider(RestoreNumber):
         self._attr_icon = icon
         self._attr_unit_of_measurement = "kW"
         self._attr_mode = "box"
-        
+
     @property
     def unique_id(self):
         """Return uniqueid."""
@@ -99,7 +98,7 @@ class BatterySlider(RestoreNumber):
             "name": self._device_name,
             "identifiers": {(DOMAIN, self._device_name)},
         }
-        
+
     @property
     def native_min_value(self):
         return 0.00
@@ -118,7 +117,7 @@ class BatterySlider(RestoreNumber):
 
     async def async_set_native_value(self, value: float) -> None:
         self._value = value
-     
+
         self.handle.set_slider_limit(value, self._key)
         self.async_write_ha_state()
 
@@ -129,4 +128,6 @@ class BatterySlider(RestoreNumber):
         if (last_number_data := await self.async_get_last_number_data()) is not None:
             self._value = last_number_data.native_value
             _LOGGER.debug("Restored %s to %.2f", self._key, self._value)
-            self.handle.set_slider_limit(self._value, self._key)  # Restore to handle too
+            self.handle.set_slider_limit(
+                self._value, self._key
+            )  # Restore to handle too

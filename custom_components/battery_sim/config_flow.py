@@ -1,4 +1,5 @@
 """Configuration flow for the Battery."""
+
 import logging
 import voluptuous as vol
 import time

@@ -1,4 +1,5 @@
 """Simulates a battery to evaluate how much energy it could save."""
+
 import logging
 import time
 import asyncio
@@ -126,7 +127,7 @@ async def async_setup(hass, config):
 async def async_setup_entry(hass, entry) -> bool:
     """Set up battery platforms from a Config Flow Entry."""
     hass.data.setdefault(DOMAIN, {})
-    
+
     _LOGGER.debug("Setup %s.%s", DOMAIN, entry.data[CONF_NAME])
 
     handle = SimulatedBatteryHandle(entry.data, hass)
@@ -149,7 +150,9 @@ async def async_setup_entry(hass, entry) -> bool:
         for handle_entry in hass.data[DOMAIN].values():
             if (DOMAIN, handle_entry._name) in device.identifiers:
                 handle_entry.async_set_battery_charge_state(state)
-                _LOGGER.debug("Battery charge updated for device %s", handle_entry._name)
+                _LOGGER.debug(
+                    "Battery charge updated for device %s", handle_entry._name
+                )
                 break
         else:
             _LOGGER.error("No handle matched for device_id: %s", device_id)
@@ -158,10 +161,14 @@ async def async_setup_entry(hass, entry) -> bool:
         DOMAIN,
         "set_battery_charge_state",
         handle_set_charge,
-        schema=vol.Schema({
-            vol.Required("device_id"): str,
-            vol.Required("charge_state"): vol.All(vol.Coerce(float), vol.Range(min=0))
-        }),
+        schema=vol.Schema(
+            {
+                vol.Required("device_id"): str,
+                vol.Required("charge_state"): vol.All(
+                    vol.Coerce(float), vol.Range(min=0)
+                ),
+            }
+        ),
     )
 
     handle._listeners.append(entry.add_update_listener(async_update_settings))
@@ -171,6 +178,7 @@ async def async_setup_entry(hass, entry) -> bool:
     )
 
     return True
+
 
 async def async_update_settings(hass, entry):
     _LOGGER.warning(f"Config change detected {entry.data[CONF_NAME]}")
@@ -221,7 +229,7 @@ class SimulatedBatteryHandle:
         self._charge_limit = config[CONF_BATTERY_MAX_CHARGE_RATE]
         self._discharge_limit = config[CONF_BATTERY_MAX_DISCHARGE_RATE]
         self._charge_percentage: float = 50
-        self._charge_state: float = config[CONF_BATTERY_SIZE]*0.5
+        self._charge_state: float = config[CONF_BATTERY_SIZE] * 0.5
         self._accumulated_export_reading: float = 0.0
         self._last_import_reading_sensor_data: str = None
         self._last_export_reading_sensor_data: str = None
@@ -282,10 +290,10 @@ class SimulatedBatteryHandle:
             self._charge_state = state
         else:
             self._charge_state = self._battery_size
-            
+
         dispatcher_send(self._hass, f"{self._name}-{MESSAGE_TYPE_BATTERY_UPDATE}")
         return
-        
+
     def async_reset_battery(self):
         """Reset the battery to start over."""
         _LOGGER.debug("Reset battery")
@@ -450,13 +458,13 @@ class SimulatedBatteryHandle:
 
     def set_slider_limit(self, value: float, key: str):
         """Called by slider to update internal charge limit."""
-        if key == "charge_limit":        
+        if key == "charge_limit":
             self._charge_limit = value
-        elif key == "discharge_limit":        
+        elif key == "discharge_limit":
             self._discharge_limit = value
         else:
             _LOGGER.error("Unknown slider type in __init__.py")
-        
+
     def update_battery(self, import_amount, export_amount):
         """Update battery statistics based on the reading for Im- or Export."""
         amount_to_charge: float = 0.0
@@ -491,9 +499,11 @@ class SimulatedBatteryHandle:
             self._max_discharge_rate / 3600
         )
         max_charge = time_since_last_battery_update * (self._max_charge_rate / 3600)
-        
+
         charge_limit = time_since_last_battery_update * (self._charge_limit / 3600)
-        discharge_limit = time_since_last_battery_update * (self._discharge_limit / 3600)
+        discharge_limit = time_since_last_battery_update * (
+            self._discharge_limit / 3600
+        )
 
         available_capacity_to_charge = self._battery_size - float(self._charge_state)
 
@@ -511,7 +521,9 @@ class SimulatedBatteryHandle:
 
         elif self._switches[OVERIDE_CHARGING]:
             _LOGGER.debug("(%s) Battery override charging.", self._name)
-            amount_to_charge = min(max_charge, available_capacity_to_charge, charge_limit)
+            amount_to_charge = min(
+                max_charge, available_capacity_to_charge, charge_limit
+            )
             amount_to_discharge = 0.0
             net_export = max(export_amount - amount_to_charge, 0)
 
@@ -522,7 +534,9 @@ class SimulatedBatteryHandle:
         elif self._switches[FORCE_DISCHARGE]:
             _LOGGER.debug("(%s) Battery forced discharging.", self._name)
             amount_to_charge = 0.0
-            amount_to_discharge = min(max_discharge, available_capacity_to_discharge, discharge_limit)
+            amount_to_discharge = min(
+                max_discharge, available_capacity_to_discharge, discharge_limit
+            )
             net_export = max(amount_to_discharge - import_amount, 0) + export_amount
             net_import = max(import_amount - amount_to_discharge, 0)
             self._sensors[BATTERY_MODE] = MODE_FORCE_DISCHARGING
@@ -544,7 +558,10 @@ class SimulatedBatteryHandle:
             _LOGGER.debug("(%s) Battery discharge only mode.", self._name)
             amount_to_charge: float = 0.0
             amount_to_discharge = min(
-                import_amount, max_discharge, available_capacity_to_discharge, discharge_limit
+                import_amount,
+                max_discharge,
+                available_capacity_to_discharge,
+                discharge_limit,
             )
             net_import = import_amount - amount_to_discharge
             net_export = export_amount
@@ -559,7 +576,10 @@ class SimulatedBatteryHandle:
                 export_amount, max_charge, available_capacity_to_charge, charge_limit
             )
             amount_to_discharge = min(
-                import_amount, max_discharge, available_capacity_to_discharge, discharge_limit
+                import_amount,
+                max_discharge,
+                available_capacity_to_discharge,
+                discharge_limit,
             )
             net_import = import_amount - amount_to_discharge
             net_export = export_amount - amount_to_charge
@@ -567,8 +587,6 @@ class SimulatedBatteryHandle:
                 self._sensors[BATTERY_MODE] = MODE_CHARGING
             else:
                 self._sensors[BATTERY_MODE] = MODE_DISCHARGING
-
-
 
         current_import_tariff = self.get_tariff_information(
             self._last_import_reading_sensor_data
@@ -599,13 +617,13 @@ class SimulatedBatteryHandle:
         self._sensors[ATTR_ENERGY_SAVED] += import_amount - net_import
 
         if self._last_import_reading_sensor_data is not None:
-            self._sensors[
-                self._last_import_reading_sensor_data[SIMULATED_SENSOR]
-            ] += net_import
+            self._sensors[self._last_import_reading_sensor_data[SIMULATED_SENSOR]] += (
+                net_import
+            )
         if self._last_export_reading_sensor_data is not None:
-            self._sensors[
-                self._last_export_reading_sensor_data[SIMULATED_SENSOR]
-            ] += net_export
+            self._sensors[self._last_export_reading_sensor_data[SIMULATED_SENSOR]] += (
+                net_export
+            )
 
         self._sensors[ATTR_ENERGY_BATTERY_IN] += amount_to_charge
         self._sensors[ATTR_ENERGY_BATTERY_OUT] += amount_to_discharge
@@ -639,4 +657,8 @@ class SimulatedBatteryHandle:
 
         dispatcher_send(self._hass, f"{self._name}-{MESSAGE_TYPE_BATTERY_UPDATE}")
 
-        _LOGGER.debug("(%s) Battery update complete. New Charge level: (%s)", self._name, self._charge_state)
+        _LOGGER.debug(
+            "(%s) Battery update complete. New Charge level: (%s)",
+            self._name,
+            self._charge_state,
+        )

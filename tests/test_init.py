@@ -1,4 +1,5 @@
 """Test component setup."""
+
 from homeassistant.setup import async_setup_component
 
 from battery_sim.const import DOMAIN

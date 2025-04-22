@@ -1,9 +1,10 @@
 """Simulated battery and associated sensors."""
+
 import time
 import logging
 
 import homeassistant.util.dt as dt_util
-from homeassistant.helpers.dispatcher import dispatcher_send, async_dispatcher_connect
+from homeassistant.helpers.dispatcher import async_dispatcher_connect
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,

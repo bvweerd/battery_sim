@@ -1,4 +1,5 @@
 """Switch  Platform Device for Battery Sim."""
+
 import logging
 
 from homeassistant.components.select import SelectEntity
