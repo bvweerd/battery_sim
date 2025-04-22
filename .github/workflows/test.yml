@@ -30,4 +30,5 @@ jobs:
           pip install pytest pytest-asyncio pytest-homeassistant-custom-component
 
       - name: Run tests
-        run: pytest tests
+        run: |
+          PYTHONPATH=./ pytest tests
