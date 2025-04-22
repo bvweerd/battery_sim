@@ -6,11 +6,13 @@ from homeassistant.core import HomeAssistant
 
 from custom_components.battery_sim.const import (
     DOMAIN,
+    CONF_BATTERY_NAME,
     CONF_BATTERY_CAPACITY,
     CONF_BATTERY_MAX_CHARGE_RATE,
     CONF_BATTERY_MAX_DISCHARGE_RATE,
     CONF_BATTERY_START_CHARGE,
-    CONF_BATTERY_NAME
+    CONF_INITIAL_MODE,
+    DEFAULT_MODE,
 )
 
 @pytest.mark.asyncio
@@ -20,13 +22,14 @@ async def test_async_setup_entry(hass: HomeAssistant):
         domain=DOMAIN,
         title="Battery Sim Test",
         data={
-            CONF_BATTERY_NAME: "TestBattery",
-            CONF_BATTERY_CAPACITY: 10.0,
-            CONF_BATTERY_MAX_CHARGE_RATE: 2.0,
-            CONF_BATTERY_MAX_DISCHARGE_RATE: 2.0,
-            CONF_BATTERY_START_CHARGE: 50.0
+            CONF_BATTERY_NAME: "Test Battery",
+            CONF_BATTERY_CAPACITY: 10.0,               # kWh
+            CONF_BATTERY_MAX_CHARGE_RATE: 2.0,         # kW
+            CONF_BATTERY_MAX_DISCHARGE_RATE: 2.0,      # kW
+            CONF_BATTERY_START_CHARGE: 50.0,           # %
+            CONF_INITIAL_MODE: DEFAULT_MODE,           # e.g. "default"
         },
-    unique_id="test_battery_id"
+        unique_id="test_battery_id"
     )
     
     entry.add_to_hass(hass)
