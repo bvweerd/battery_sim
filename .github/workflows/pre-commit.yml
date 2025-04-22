@@ -33,3 +33,13 @@ jobs:
         working-directory: ./
         run: |
           pre-commit run --all-files
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v6
+        with:
+            token: ${{ secrets.GITHUB_TOKEN }}
+            branch: update/pre-commit-update
+            title: Update pre-commit
+            commit-message: "Chore(deps): Updating 'pre-commit'"
+            body: |
+              Update 'pre-commit'
