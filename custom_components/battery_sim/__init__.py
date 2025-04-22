@@ -43,7 +43,6 @@ from .const import (
     CONF_ENERGY_TARIFF,
     CONF_EXPORT_SENSOR,
     CONF_IMPORT_SENSOR,
-    CONF_UPDATE_FREQUENCY,
     CONF_INPUT_LIST,
     DISCHARGE_ONLY,
     DISCHARGING_RATE,
@@ -237,7 +236,7 @@ class SimulatedBatteryHandle:
         if CONF_INPUT_LIST in config:
             self._inputs = config[CONF_INPUT_LIST]
         else:
-            """Needed for backwards compatability"""
+            """Needed for backwards compatibility"""
             self._inputs = generate_input_list(config=config)
 
         self._switches: dict = {
@@ -511,7 +510,7 @@ class SimulatedBatteryHandle:
             self._sensors[BATTERY_MODE] = MODE_IDLE
 
         elif self._switches[OVERIDE_CHARGING]:
-            _LOGGER.debug("(%s) Battery overide charging.", self._name)
+            _LOGGER.debug("(%s) Battery override charging.", self._name)
             amount_to_charge = min(max_charge, available_capacity_to_charge, charge_limit)
             amount_to_discharge = 0.0
             net_export = max(export_amount - amount_to_charge, 0)
