@@ -1,29 +1,19 @@
-"""Fixtures for testing."""
-
+"""Global test configuration and fixtures."""
 import pytest
-
-class DummyHandle:
-    def __init__(self, name):
-        self._name = name
-        self._max_charge_rate = 3.5
-        self._max_discharge_rate = 4.0
-        self._slider_limits = {}
-
-    def set_slider_limit(self, value, key):
-        self._slider_limits[key] = value
-
-
-@pytest.fixture
-def mock_handle():
-    class DummyHandle:
-        def __init__(self):
-            self._name = "TestBattery"
-            self._battery_size = 10
-            self._charge_limit = 5
-            self._charge_state = 5
-    return DummyHandle()
+from unittest.mock import MagicMock
 
 @pytest.fixture(autouse=True)
 def auto_enable_custom_integrations(enable_custom_integrations):
-    """Enable custom integrations."""
-    return
+    """Automatically enable custom integrations in tests."""
+    yield
+
+@pytest.fixture
+def mock_handle():
+    """Fixture that returns a mocked handle for BatterySlider."""
+    mock = MagicMock()
+    
+    mock._slider_limits = {
+        "charge_limit": 0  # Start met een standaard waarde, zoals 0
+    }
+
+    return mock
