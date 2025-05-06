@@ -1,12 +1,12 @@
 {
   "domain": "battery_sim",
   "name": "Home Battery Simulation",
-  "codeowners": ["@hif2k1"],
+  "codeowners": ["@hif2k1", "@bvweerd"],
   "config_flow": true,
-  "documentation": "https://github.com/hif2k1/battery_sim/",
+  "documentation": "https://github.com/bvweerd/battery_sim/",
   "iot_class": "local_push",
-  "issue_tracker": "https://github.com/hif2k1/battery_sim/issues",
+  "issue_tracker": "https://github.com/bvweerd/battery_sim/issues",
   "quality_scale": "internal",
   "requirements": [],
-  "version": "1.0"
+  "version": "1.4.0"
 }
